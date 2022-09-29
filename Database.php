@@ -15,7 +15,7 @@ class Database
     {
         if (!$this->conn) {
             $this->mysqli = new mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
-
+            $this->conn = true;
             if ($this->mysqli->connect_error) {
                 array_push($this->result, $this->mysqli->connect_error);
                 return false;
@@ -26,9 +26,25 @@ class Database
     }
 
     // Insert Function
-    public function insert()
+    public function insert($table, $params = [])
     {
+        if ($this->tableExists($table)) {
 
+            $table_columns = implode(', ', array_keys($params));
+            $table_value = implode("', '", $params);
+
+            $sql = "INSERT INTO $table ($table_columns) VALUES ('$table_value')";
+
+            if ($this->mysqli->query($sql)) {
+                array_push($this->result, $this->mysqli->insert_id);
+                return true;
+            } else {
+                array_push($this->result, $this->mysqli->error);
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     // Update Function
@@ -47,6 +63,28 @@ class Database
     public function select()
     {
 
+    }
+
+    private function tableExists($table)
+    {
+        $sql = "SHOW TABLE FROM $this->db_name LIKE '$table'";
+        $tableInDb = $this->mysqli->query($sql);
+
+        if ($tableInDb) {
+            if ($tableInDb->num_rows == 1) {
+                return true;
+            } else {
+                array_push($this->result, $table . " does not exist in this database");
+                return false;
+            }
+        }
+    }
+
+    public function getResult()
+    {
+        $val = $this->result;
+        $this->result = [];
+        return $val;
     }
 
     //close connection
