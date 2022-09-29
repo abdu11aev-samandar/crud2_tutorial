@@ -7,10 +7,22 @@ class Database
     private $db_pass = "123456";
     private $db_name = "testing";
 
+    private $mysqli = "";
+    private $result = [];
     private $conn = false;
 
     public function __construct()
     {
+        if (!$this->conn) {
+            $this->mysqli = new mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
+
+            if ($this->mysqli->connect_error) {
+                array_push($this->result, $this->mysqli->connect_error);
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     // Insert Function
