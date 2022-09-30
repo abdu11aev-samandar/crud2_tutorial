@@ -4,10 +4,14 @@ include 'Database.php';
 
 $obj = new Database();
 
-$obj->insert('students', ['student_name' => 'Soliy', 'age' => '20', 'city' => 'Gurlan']);
-echo "Insert result is : ";
-print_r($obj->getResult());
+//$obj->insert('students', ['student_name' => 'Soliy', 'age' => '20', 'city' => 'Gurlan']);
+//echo "Insert result is : ";
+//print_r($obj->getResult());
 
-$obj->update('students', ['student_name' => 'Soliy', 'age' => '20', 'city' => 'Gurlan'], 'id="7"');
-echo "Update result is : ";
+//$obj->update('students', ['student_name' => 'Soliy', 'age' => '20', 'city' => 'Gurlan'], 'id="7"');
+//echo "Update result is : ";
+//print_r($obj->getResult());
+
+$obj->delete('students', 'id="6"');
+echo "Delete result is : ";
 print_r($obj->getResult());
