@@ -20,6 +20,8 @@ $obj = new Database();
 //echo "SQL result is : ";
 //print_r($obj->getResult());
 
-$obj->select('students', '*', null, null, null, null);
-echo "SELECT result is : ";
-print_r($obj->getResult());
+//$obj->select('students', '*', null, null, null, null);
+//echo "SELECT result is : ";
+//print_r($obj->getResult());
+
+$obj->pagination('students', null, null, 2);
