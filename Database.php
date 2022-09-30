@@ -28,29 +28,46 @@ class Database
     // Insert Function
     public function insert($table, $params = [])
     {
+        //Check to see if the table exists
         if ($this->tableExists($table)) {
 
             $table_columns = implode(', ', array_keys($params));
             $table_value = implode("', '", $params);
 
             $sql = "INSERT INTO $table ($table_columns) VALUES ('$table_value')";
-
+            //Make the query to insert to the database
             if ($this->mysqli->query($sql)) {
                 array_push($this->result, $this->mysqli->insert_id);
-                return true;
+                return true; //The data has been inserted
             } else {
                 array_push($this->result, $this->mysqli->error);
-                return false;
+                return false;//The data has not been inserted
             }
         } else {
-            return false;
+            return false;//Table does not exist
         }
     }
 
     // Update Function
-    public function update()
+    public function update($table, $params = [], $where = null)
     {
-
+        if ($this->tableExists($table)) {
+            $args = [];
+            foreach ($params as $key => $value) {
+                $args[] = "$key = '$value'";
+            }
+            $sql = "UPDATE $table SET " . implode(', ', $args);
+            if ($where != null) {
+                $sql .= " WHERE $where";
+            }
+            if ($this->mysqli->query($sql)) {
+                array_push($this->result, $this->mysqli->affected_rows);
+            } else {
+                array_push($this->result, $this->mysqli->error);
+            }
+        } else {
+            return false;
+        }
     }
 
     // Delete Function
